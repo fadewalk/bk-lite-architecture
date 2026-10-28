@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BK-Lite 架构图集</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f6f8fa; --panel: #ffffff; --text: #1f2328; --muted: #59636e;
+    --border: #d1d9e0; --accent: #0969da; --chip-bg: #ddf4ff; --chip-text: #0550ae;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --panel: #151b23; --text: #f0f6fc; --muted: #9198a1;
+      --border: #3d444d; --accent: #4493f8; --chip-bg: #121d2f; --chip-text: #4493f8;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+  header h1 { font-size: 2rem; margin: 0 0 .5rem; letter-spacing: -0.02em; }
+  header .meta { color: var(--muted); margin: 0 0 .25rem; }
+  header .meta a { color: var(--accent); text-decoration: none; }
+  header .meta code { font-size: .85em; background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: .1em .4em; }
+  .hint { color: var(--muted); font-size: .92rem; margin-top: .75rem; }
+  section { margin-top: 2.5rem; }
+  section > h2 { font-size: 1.15rem; margin: 0 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid var(--border); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  a.card {
+    display: block; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.1rem 1.2rem; text-decoration: none; color: var(--text);
+    transition: border-color .15s, transform .15s;
+  }
+  a.card:hover, a.card:focus-visible { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: center; gap: .6rem; margin-bottom: .4rem; }
+  .card h3 { font-size: 1.02rem; margin: 0; }
+  .chip {
+    font-size: .72rem; padding: .1rem .55rem; border-radius: 999px;
+    background: var(--chip-bg); color: var(--chip-text); white-space: nowrap;
+  }
+  .card p { margin: 0; color: var(--muted); font-size: .9rem; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>BK-Lite 架构图集</h1>
+    <p class="meta">基于 <a href="https://github.com/TencentBlueKing/bk-lite">TencentBlueKing/bk-lite</a> 上游 master（<code>65fc3d6759</code>，2026-10-28）绘制，共 13 张。</p>
+    <p class="hint">每张图为独立交互页，支持明暗主题、缩放、搜索、节点聚焦与引导视图；同名 <code>.json</code> 为 Archify 可复现规格。</p>
+  </header>
+
+  <section>
+    <h2>总览与入口</h2>
+    <div class="grid">
+      <a class="card" href="bklite-architecture.html"><div class="top"><h3>项目总览</h3><span class="chip">architecture</span></div><p>Web、Django、Celery、NATS、CMDB、Agents 与外部基础设施总览</p></a>
+      <a class="card" href="bklite-request-sequence.html"><div class="top"><h3>Web 请求时序</h3><span class="chip">sequence</span></div><p>浏览器 → Next.js → API Proxy → Django → 业务模块 → 数据层</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>核心业务闭环</h2>
+    <div class="grid">
+      <a class="card" href="bklite-cmdb-collection.html"><div class="top"><h3>CMDB 采集闭环</h3><span class="chip">workflow</span></div><p>采集任务、NATS、Stargazer/Collector、外部资源与图谱写入</p></a>
+      <a class="card" href="bklite-job-execution.html"><div class="top"><h3>作业与补丁执行</h3><span class="chip">workflow</span></div><p>Job/Patch API、执行记录、Celery、NATS、Executor 与回调</p></a>
+      <a class="card" href="bklite-apm-dataflow.html"><div class="top"><h3>APM 数据流</h3><span class="chip">dataflow</span></div><p>OTLP、Collector、NATS、VictoriaTraces、APM API、策略与告警</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>运行机制与源码导航</h2>
+    <div class="grid">
+      <a class="card" href="bklite-server-startup.html"><div class="top"><h3>Server 启动依赖</h3><span class="chip">workflow</span></div><p>环境加载、迁移、batch_init、Supervisor、Django、Celery、NATS Listener</p></a>
+      <a class="card" href="bklite-nats-topology.html"><div class="top"><h3>NATS 消息拓扑</h3><span class="chip">dataflow</span></div><p>Core NATS RPC、JetStream、执行 Agent、远端目标与回调状态</p></a>
+      <a class="card" href="bklite-celery-lifecycle.html"><div class="top"><h3>Celery 生命周期</h3><span class="chip">lifecycle</span></div><p>创建、排队、执行、成功、重试、失败、取消</p></a>
+      <a class="card" href="bklite-agent-capabilities.html"><div class="top"><h3>Agent 能力分层</h3><span class="chip">architecture</span></div><p>Webhookd、Edge Bundle、Stargazer、Collector、Executor 的职责边界</p></a>
+      <a class="card" href="bklite-module-navigation.html"><div class="top"><h3>业务模块导航</h3><span class="chip">architecture</span></div><p>server/apps 模块地图，含 Module Link 与 RUM</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>数据、权限与部署</h2>
+    <div class="grid">
+      <a class="card" href="bklite-permission-boundary.html"><div class="top"><h3>权限与多租户边界</h3><span class="chip">architecture</span></div><p>Session、OpenAPI Gateway、组织范围、RBAC、资源过滤与审计</p></a>
+      <a class="card" href="bklite-cmdb-storage.html"><div class="top"><h3>CMDB 双存储</h3><span class="chip">architecture</span></div><p>关系数据库与 FalkorDB/Neo4j 的职责分工及查询汇合</p></a>
+      <a class="card" href="bklite-deployment-topology.html"><div class="top"><h3>部署拓扑</h3><span class="chip">architecture</span></div><p>Web/Server 容器、RabbitMQ、Redis、NATS、Agent、RUM 与目标资源</p></a>
+    </div>
+  </section>
+
+  <footer>
+    规格与索引见 <a href="https://github.com/fadewalk/bk-lite-architecture">fadewalk/bk-lite-architecture</a> ·
+    由 <a href="https://github.com/tt-a1i/archify">Archify</a> 生成 · 上游文档入口：<a href="https://github.com/TencentBlueKing/bk-lite">TencentBlueKing/bk-lite</a>
+  </footer>
+</div>
+</body>
+</html>
