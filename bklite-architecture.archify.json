@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BK-Lite 项目流程架构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/TencentBlueKing/bk-lite.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "07032d1a0519741c74bd533559141131d43caee4"
+    },
+    "views": [
+      {"id":"request-path","label":"一次请求如何落地","focus":["users","web","proxy","server","rdb"],"note":"从控制台进入 Next.js API Proxy，再落到 Django 与关系数据库。"},
+      {"id":"async-work","label":"异步执行链路","focus":["server","celery","nats","executors","infra"],"note":"长任务由 Celery 承接，经 NATS 调度到执行 agents 与外部资源。"},
+      {"id":"cmdb-loop","label":"CMDB 资源闭环","focus":["web","server","nats","cmdbgraph","collectors"],"note":"从 CMDB 页面配置采集，经 NATS 与采集器写入图数据库。"}
+    ]
+  },
+  "components": [
+    {"id":"users","type":"external","label":"用户 / 浏览器","sublabel":"Browser","pos":[40,190],"size":[150,64],"sources":[{"path":"web/src/app/layout.tsx","label":"Web shell"}]},
+    {"id":"web","type":"frontend","label":"Next.js Web","sublabel":"App Router :3000","pos":[250,190],"size":[150,64],"sources":[{"path":"web/package.json","line":14,"label":"dev server"}]},
+    {"id":"proxy","type":"backend","label":"Next.js API Proxy","sublabel":"/api/proxy → /api/v1","pos":[460,190],"size":[170,64],"sources":[{"path":"web/src/app/(core)/api/proxy/[...path]/route.ts","label":"proxy route"}]},
+    {"id":"server","type":"backend","label":"Django ASGI Server","sublabel":"模块化单体 / DRF","pos":[700,190],"size":[180,64],"sources":[{"path":"server/asgi.py","label":"ASGI entry"}]},
+    {"id":"rdb","type":"database","label":"关系数据库","sublabel":"Django ORM / 事务数据","pos":[970,190],"size":[180,64],"sources":[{"path":"server/config/components/database.py","line":13,"label":"DB config"}]},
+    {"id":"redis","type":"database","label":"Redis","sublabel":"缓存 / Agent 状态","pos":[970,340],"size":[150,64],"sources":[{"path":"server/config/components/cache.py","line":4,"label":"cache config"}]},
+    {"id":"celery","type":"messagebus","label":"Celery Worker + Beat","sublabel":"RabbitMQ Broker / 定时任务","pos":[700,340],"size":[190,64],"sources":[{"path":"server/config/components/celery.py","line":31,"label":"Celery config"}]},
+    {"id":"nats","type":"messagebus","label":"NATS RPC / JetStream","sublabel":"Server ↔ Agents 总线","pos":[695,80],"size":[190,64],"sources":[{"path":"server/config/components/nats.py","line":23,"label":"NATS config"}]},
+    {"id":"cmdbgraph","type":"database","label":"CMDB 图数据库","sublabel":"FalkorDB 或 Neo4j","pos":[970,80],"size":[180,64],"sources":[{"path":"server/apps/cmdb/graph/drivers/graph_client.py","label":"graph client"}]},
+    {"id":"collectors","type":"backend","label":"Stargazer / Collectors","sublabel":"采集、指标与回传","pos":[970,490],"size":[190,64],"sources":[{"path":"agents/stargazer/server.py","label":"collector entry"}]},
+    {"id":"executors","type":"backend","label":"Executor Agents","sublabel":"NATS / Ansible / SSH / WinRM","pos":[430,490],"size":[190,64],"sources":[{"path":"agents/ansible-executor/main.py","label":"executor entry"}]},
+    {"id":"infra","type":"external","label":"外部基础设施","sublabel":"主机 / K8s / 云资源 / MinIO / APM","pos":[960,595],"size":[210,64],"sources":[{"path":"deploy/apm/compose.yaml","label":"APM deployment"}]}
+  ],
+  "boundaries": [
+    {"kind":"region","label":"BK-Lite 主应用边界","wraps":["web","proxy","server","rdb","redis","celery","nats","cmdbgraph"],"pad":24}
+  ],
+  "connections": [
+    {"id":"users-web","from":"users","to":"web","label":"访问控制台","variant":"emphasis"},
+    {"id":"web-proxy","from":"web","to":"proxy","label":"页面请求"},
+    {"id":"proxy-server","from":"proxy","to":"server","label":"/api/v1 HTTP / SSE","labelAt":[665,268]},
+    {"id":"server-rdb","from":"server","to":"rdb","label":"Django ORM"},
+    {"id":"server-redis","from":"server","to":"redis","label":"缓存 / 状态","fromSide":"bottom","toSide":"top","via":[[790,300],[1045,300]]},
+    {"id":"server-celery","from":"server","to":"celery","label":"投递异步任务","variant":"dashed","via":[[880,300],[795,300],[795,340],[700,340]],"labelAt":[835,285]},
+    {"id":"server-nats","from":"server","to":"nats","label":"RPC / 事件","fromSide":"top","toSide":"bottom","route":"straight","labelAt":[820,158]},
+    {"id":"nats-executors","from":"nats","to":"executors","label":"任务与回调","variant":"dashed","fromSide":"left","toSide":"top","via":[[10,112],[10,455],[525,455]],"labelAt":[100,175]},
+    {"id":"nats-collectors","from":"nats","to":"collectors","label":"采集请求 / 结果","variant":"dashed","fromSide":"right","toSide":"top","via":[[935,112],[935,50],[1180,50],[1180,455],[1065,455]],"labelAt":[1050,45]},
+    {"id":"server-cmdb","from":"server","to":"cmdbgraph","label":"CMDB 实例 / 拓扑","fromSide":"top","toSide":"bottom","via":[[790,180],[1060,180]],"labelAt":[930,165]},
+    {"id":"executors-infra","from":"executors","to":"infra","label":"SSH / Ansible / WinRM","variant":"dashed","fromSide":"bottom","toSide":"top","via":[[525,570],[1065,570]],"labelAt":[700,555]},
+    {"id":"collectors-infra","from":"collectors","to":"infra","label":"主机 / K8s / 云资源","variant":"dashed","route":"straight","labelAt":[940,585]}
+  ],
+  "cards": [
+    {"dot":"cyan","title":"请求入口","items":["浏览器先进入 Next.js 页面","API Proxy 将 /api/proxy 转发到 Django /api/v1"]},
+    {"dot":"emerald","title":"模块化单体","items":["Django Server 统一挂载 server/apps 业务模块","关系数据库承载事务数据，CMDB 拓扑另走图数据库"]},
+    {"dot":"amber","title":"异步与执行","items":["Celery 默认使用 RabbitMQ Broker","NATS RPC / JetStream 连接 Stargazer、采集器与执行 agents"]}
+  ]
+}

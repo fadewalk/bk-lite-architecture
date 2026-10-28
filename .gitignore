@@ -1,0 +1,5 @@
+.DS_Store
+*.png
+*.visual-check.json
+*.visual-check.html
+*.delivery.json

@@ -1,0 +1,42 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {"title": "BK-Lite Server 启动与进程依赖", "locale": "zh-CN", "quality_profile": "showcase"},
+  "lanes": [
+    {"id": "bootstrap", "label": "启动脚本"},
+    {"id": "data", "label": "数据初始化"},
+    {"id": "process", "label": "受管进程"},
+    {"id": "runtime", "label": "运行期依赖"}
+  ],
+  "phases": [
+    {"id": "prepare", "label": "Prepare", "fromCol": 0, "toCol": 1},
+    {"id": "init", "label": "Initialize", "fromCol": 2, "toCol": 3, "variant": "emphasis"},
+    {"id": "serve", "label": "Serve", "fromCol": 4, "toCol": 5, "variant": "dashed"}
+  ],
+  "mainPath": ["env", "migrate", "cache-table", "batch-init", "supervisor", "django"],
+  "nodes": [
+    {"id": "env", "lane": "bootstrap", "col": 0, "type": "backend", "label": "加载环境配置"},
+    {"id": "migrate", "lane": "data", "col": 1, "type": "database", "label": "数据库迁移", "sublabel": "写入 schema"},
+    {"id": "cache-table", "lane": "data", "col": 2, "type": "database", "label": "创建 Cache Table", "width": 130},
+    {"id": "batch-init", "lane": "bootstrap", "col": 3, "type": "backend", "label": "batch_init", "sublabel": "系统数据"},
+    {"id": "supervisor", "lane": "process", "col": 4, "type": "backend", "label": "Supervisor", "sublabel": "进程编排"},
+    {"id": "django", "lane": "process", "col": 5, "type": "backend", "label": "Django ASGI"},
+    {"id": "celery", "lane": "runtime", "col": 4, "type": "messagebus", "label": "Celery Worker + Beat", "width": 160},
+    {"id": "nats-listener", "lane": "runtime", "col": 5, "type": "messagebus", "label": "NATS Listener"},
+    {"id": "broker", "lane": "runtime", "col": 0, "type": "messagebus", "label": "RabbitMQ / Broker", "width": 140},
+    {"id": "nats", "lane": "runtime", "col": 2, "type": "messagebus", "label": "NATS 服务"},
+    {"id": "db", "lane": "data", "col": 5, "type": "database", "label": "关系数据库", "width": 120}
+  ],
+  "edges": [
+    {"from": "env", "to": "migrate", "label": "读取 DB 配置", "role": "main"},
+    {"from": "migrate", "to": "cache-table", "label": "迁移完成", "role": "main"},
+    {"from": "cache-table", "to": "batch-init", "label": "基础设施就绪", "role": "main"},
+    {"from": "batch-init", "to": "supervisor", "label": "允许拉起受管进程", "role": "main", "variant": "emphasis"},
+    {"from": "supervisor", "to": "django", "label": "启动 API 服务", "role": "main"},
+    {"from": "supervisor", "to": "celery", "label": "启动异步任务进程", "role": "async", "variant": "dashed"},
+    {"from": "supervisor", "to": "nats-listener", "label": "启动 RPC 消费进程", "role": "async", "variant": "dashed"},
+    {"from": "django", "to": "db", "label": "运行期 ORM 访问", "role": "async", "variant": "dashed"},
+    {"from": "celery", "to": "broker", "label": "运行期取任务", "role": "async", "variant": "dashed"},
+    {"from": "nats-listener", "to": "nats", "label": "运行期连接 / 消费", "role": "async", "variant": "dashed"}
+  ]
+}
