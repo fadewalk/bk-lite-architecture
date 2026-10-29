@@ -75,3 +75,15 @@
 - 业务模块导航图：新增 `Module Link`（跨模块同步任务，CMDB→监控同步），可观测分组补入 `RUM`
 - 部署拓扑图：新增 `RUM 数据面`（`deploy/rum`，Faro 上报 + NATS 控制链路）
 - 上游将 `workflow_orchestration` 更名为 `workflow`，未单独成图的模块归属不受影响
+
+## 技术文档
+
+`docs/` 收录自上游仓库精选的技术文档（同步基线 `65fc3d6759`，内容与配图版权归原作者及上游项目所有）：
+
+- **项目文档**：Readme、CONTEXT（领域术语）、PRODUCT（产品取舍）、DESIGN、DEVELOP
+- **架构决策记录（ADR）**：13 篇长期架构决定
+- **模块架构分析**：15 篇 `server/apps` 各模块现状与演进分析（含架构配图）
+- **运维手册**：启动依赖、发布、诊断等 12 篇
+- **工程能力规范**：后端工程、安全、可靠性、质量、架构、OpenAPI 网关 6 篇
+
+在线阅读入口：[docs.html](https://fadewalk.github.io/bk-lite-architecture/docs.html?doc=docs/Readme.md)，或从首页目录进入。

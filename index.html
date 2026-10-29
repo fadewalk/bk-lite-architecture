@@ -53,7 +53,7 @@
   <header>
     <h1>BK-Lite 架构图集</h1>
     <p class="meta">基于 <a href="https://github.com/TencentBlueKing/bk-lite">TencentBlueKing/bk-lite</a> 上游 master（<code>65fc3d6759</code>，2026-10-28）绘制，共 13 张。</p>
-    <p class="hint">每张图为独立交互页，支持明暗主题、缩放、搜索、节点聚焦与引导视图；同名 <code>.json</code> 为 Archify 可复现规格。</p>
+    <p class="hint">每张图为独立交互页，支持明暗主题、缩放、搜索、节点聚焦与引导视图；同名 <code>.json</code> 为 Archify 可复现规格；页面底部附上游技术文档目录。</p>
   </header>
 
   <section>
@@ -90,6 +90,87 @@
       <a class="card" href="bklite-permission-boundary.html"><div class="top"><h3>权限与多租户边界</h3><span class="chip">architecture</span></div><p>Session、OpenAPI Gateway、组织范围、RBAC、资源过滤与审计</p></a>
       <a class="card" href="bklite-cmdb-storage.html"><div class="top"><h3>CMDB 双存储</h3><span class="chip">architecture</span></div><p>关系数据库与 FalkorDB/Neo4j 的职责分工及查询汇合</p></a>
       <a class="card" href="bklite-deployment-topology.html"><div class="top"><h3>部署拓扑</h3><span class="chip">architecture</span></div><p>Web/Server 容器、RabbitMQ、Redis、NATS、Agent、RUM 与目标资源</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>项目文档</h2>
+    <div class="grid">
+      <a class="card" href="docs.html?doc=docs/Readme.md"><div class="top"><h3>Blueking Lite</h3></div><p>Readme.md</p></a>
+      <a class="card" href="docs.html?doc=docs/CONTEXT.md"><div class="top"><h3>BK-Lite Shared Context</h3></div><p>CONTEXT.md</p></a>
+      <a class="card" href="docs.html?doc=docs/PRODUCT.md"><div class="top"><h3>BK-Lite 产品原则</h3></div><p>PRODUCT.md</p></a>
+      <a class="card" href="docs.html?doc=docs/DESIGN.md"><div class="top"><h3>DESIGN.md</h3></div><p>DESIGN.md</p></a>
+      <a class="card" href="docs.html?doc=docs/DEVELOP.md"><div class="top"><h3>BK-Lite 开发与运行</h3></div><p>DEVELOP.md</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>架构决策记录（ADR）</h2>
+    <div class="grid">
+      <a class="card" href="docs.html?doc=docs/0001-conversation-led-engineering-workflow.md"><div class="top"><h3>ADR 0001：采用按风险分级的 Grill 工程工作流</h3></div><p>0001-conversation-led-engineering-workflow.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0002-physically-delete-monitor-instances.md"><div class="top"><h3>ADR 0002：监控实例采用物理删除</h3></div><p>0002-physically-delete-monitor-instances.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0003-separate-apm-control-and-telemetry-planes.md"><div class="top"><h3>ADR 0003：APM 控制面与遥测数据面分离</h3></div><p>0003-separate-apm-control-and-telemetry-planes.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0004-apps-own-alert-lifecycles.md"><div class="top"><h3>ADR 0004：领域 App 拥有自身告警生命周期</h3></div><p>0004-apps-own-alert-lifecycles.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0005-use-uuid-as-cmdb-instance-identity.md"><div class="top"><h3>ADR 0005：使用 UUID 作为 CMDB 实例业务身份</h3></div><p>0005-use-uuid-as-cmdb-instance-identity.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0005-version-log-aggregate-group-identities.md"><div class="top"><h3>ADR 0005：日志聚合分组身份采用版本化规范摘要</h3></div><p>0005-version-log-aggregate-group-identities.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0006-apm-regional-nats-victoriatraces-pipeline.md"><div class="top"><h3>ADR 0006：APM 采用区域 Collector、JetStream 与 VictoriaTraces-only 数据面</h3></div><p>0006-apm-regional-nats-victoriatraces-pipeline.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0007-hide-victorialogs-message-field-behind-adapter.md"><div class="top"><h3>ADR 0007：把 VictoriaLogs 主消息字段封装在适配器内</h3></div><p>0007-hide-victorialogs-message-field-behind-adapter.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0008-apm-trusted-regional-ingress.md"><div class="top"><h3>ADR 0008：APM OTLP 入口采用受信区域网络边界</h3></div><p>0008-apm-trusted-regional-ingress.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0009-apm-event-snapshots-split-semantic-index-and-series-payload.md"><div class="top"><h3>ADR 0009：APM 事件快照拆分语义索引与指标序列载荷</h3></div><p>0009-apm-event-snapshots-split-semantic-index-and-series-payload.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0009-rum-public-gateway.md"><div class="top"><h3>ADR 0009: RUM public gateway is separate from APM trusted OTLP</h3></div><p>0009-rum-public-gateway.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0010-rum-requires-redis.md"><div class="top"><h3>ADR 0010: Redis is the RUM hot path, not the config authority</h3></div><p>0010-rum-requires-redis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/0010-use-central-log-receive-time-for-indexing.md"><div class="top"><h3>ADR 0010：日志索引统一使用中心接收时间</h3></div><p>0010-use-central-log-receive-time-for-indexing.md</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>模块架构分析</h2>
+    <div class="grid">
+      <a class="card" href="docs.html?doc=docs/agent-architecture-evidence.md"><div class="top"><h3>Agent 使用模块架构证据指南</h3></div><p>agent-architecture-evidence.md</p></a>
+      <a class="card" href="docs.html?doc=docs/alerts-module-architecture-analysis.md"><div class="top"><h3>Alerts 模块架构与代码结构分析</h3></div><p>alerts-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/apm-module-architecture-analysis.md"><div class="top"><h3>APM 模块架构与代码结构分析</h3></div><p>apm-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/cmdb-module-architecture-analysis.md"><div class="top"><h3>CMDB 模块架构与代码结构分析</h3></div><p>cmdb-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/job-mgmt-module-architecture-analysis.md"><div class="top"><h3>JobMgmt 模块架构与代码结构分析</h3></div><p>job-mgmt-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/log-module-architecture-analysis.md"><div class="top"><h3>Log 模块架构与代码结构分析</h3></div><p>log-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/mlops-module-architecture-analysis.md"><div class="top"><h3>MLOps 模块架构与代码结构分析</h3></div><p>mlops-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/monitor-module-architecture-analysis.md"><div class="top"><h3>Monitor 模块架构与代码结构分析（示例）</h3></div><p>monitor-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/node-mgmt-module-architecture-analysis.md"><div class="top"><h3>NodeMgmt 模块架构与代码结构分析</h3></div><p>node-mgmt-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/operation-analysis-module-architecture-analysis.md"><div class="top"><h3>OperationAnalysis 模块架构与代码结构分析</h3></div><p>operation-analysis-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/opspilot-module-architecture-analysis.md"><div class="top"><h3>OpsPilot 模块架构与代码结构分析</h3></div><p>opspilot-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/patch-mgmt-module-architecture-analysis.md"><div class="top"><h3>PatchMgmt 模块架构与代码结构分析</h3></div><p>patch-mgmt-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/platform-core-module-architecture-analysis.md"><div class="top"><h3>平台基础能力模块架构与代码结构分析</h3></div><p>platform-core-module-architecture-analysis.md</p></a>
+      <a class="card" href="docs.html?doc=docs/server-module-analysis-roadmap.md"><div class="top"><h3>Server 后端模块架构分析路线图</h3></div><p>server-module-analysis-roadmap.md</p></a>
+      <a class="card" href="docs.html?doc=docs/system-mgmt-module-architecture-analysis.md"><div class="top"><h3>SystemMgmt 模块架构与代码结构分析</h3></div><p>system-mgmt-module-architecture-analysis.md</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>运维手册</h2>
+    <div class="grid">
+      <a class="card" href="docs.html?doc=docs/api-token-permission-cache-rollout.md"><div class="top"><h3>API Token 权限代际缓存发布与回滚</h3></div><p>api-token-permission-cache-rollout.md</p></a>
+      <a class="card" href="docs.html?doc=docs/apm-probe-artifact-release.md"><div class="top"><h3>APM 探针制品发布 Runbook</h3></div><p>apm-probe-artifact-release.md</p></a>
+      <a class="card" href="docs.html?doc=docs/builtin-package-image-release.md"><div class="top"><h3>内置控制器与采集器包镜像发布 Runbook</h3></div><p>builtin-package-image-release.md</p></a>
+      <a class="card" href="docs.html?doc=docs/cmdb-instance-uuid-cutover.md"><div class="top"><h3>CMDB 实例 UUID 切换 Runbook</h3></div><p>cmdb-instance-uuid-cutover.md</p></a>
+      <a class="card" href="docs.html?doc=docs/console-iframe-screen-mode.md"><div class="top"><h3>Control Console iframe 屏显模式</h3></div><p>console-iframe-screen-mode.md</p></a>
+      <a class="card" href="docs.html?doc=docs/default-namespace-nats-credentials.md"><div class="top"><h3>默认命名空间 NATS 凭据升级</h3></div><p>default-namespace-nats-credentials.md</p></a>
+      <a class="card" href="docs.html?doc=docs/external-nats-notification-subscriber.md"><div class="top"><h3>外部服务订阅 BK-Lite 通知</h3></div><p>external-nats-notification-subscriber.md</p></a>
+      <a class="card" href="docs.html?doc=docs/nats-package-init-timeout-troubleshooting.md"><div class="top"><h3>NATS 包初始化连接超时排查手册</h3></div><p>nats-package-init-timeout-troubleshooting.md</p></a>
+      <a class="card" href="docs.html?doc=docs/pg-connection-diagnostics.md"><div class="top"><h3>PG 连接不回落：临时诊断日志</h3></div><p>pg-connection-diagnostics.md</p></a>
+      <a class="card" href="docs.html?doc=docs/server-startup-dependencies.md"><div class="top"><h3>Server 启动顺序与服务依赖边界</h3></div><p>server-startup-dependencies.md</p></a>
+      <a class="card" href="docs.html?doc=docs/windows-controller-remote-install-release.md"><div class="top"><h3>Windows 控制器远程安装发布 Runbook</h3></div><p>windows-controller-remote-install-release.md</p></a>
+      <a class="card" href="docs.html?doc=docs/zombie-host-report-prerequisites.md"><div class="top"><h3>僵尸机报表前置配置手册</h3></div><p>zombie-host-report-prerequisites.md</p></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>工程能力规范</h2>
+    <div class="grid">
+      <a class="card" href="docs.html?doc=docs/backend-engineering.md"><div class="top"><h3>后端编码规范 / 高频陷阱清单</h3></div><p>backend-engineering.md</p></a>
+      <a class="card" href="docs.html?doc=docs/platform-security.md"><div class="top"><h3>安全红线</h3></div><p>platform-security.md</p></a>
+      <a class="card" href="docs.html?doc=docs/platform-reliability.md"><div class="top"><h3>可靠性红线</h3></div><p>platform-reliability.md</p></a>
+      <a class="card" href="docs.html?doc=docs/engineering-quality.md"><div class="top"><h3>质量门禁</h3></div><p>engineering-quality.md</p></a>
+      <a class="card" href="docs.html?doc=docs/engineering-architecture.md"><div class="top"><h3>系统架构</h3></div><p>engineering-architecture.md</p></a>
+      <a class="card" href="docs.html?doc=docs/openapi-gateway.md"><div class="top"><h3>OpenAPI 统一网关 / 对外暴露规范</h3></div><p>openapi-gateway.md</p></a>
     </div>
   </section>
 
