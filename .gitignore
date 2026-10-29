@@ -1,5 +1,5 @@
 .DS_Store
-*.png
+/*.png
 *.visual-check.json
 *.visual-check.html
 *.delivery.json
