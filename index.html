@@ -10,6 +10,7 @@
     color-scheme: light dark;
     --bg: #f6f8fa; --panel: #ffffff; --text: #1f2328; --muted: #59636e;
     --border: #d1d9e0; --accent: #0969da; --chip-bg: #ddf4ff; --chip-text: #0550ae;
+    --sidebar-w: 300px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -22,16 +23,53 @@
     margin: 0; background: var(--bg); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     line-height: 1.6;
+    display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
   }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
-  header h1 { font-size: 2rem; margin: 0 0 .5rem; letter-spacing: -0.02em; }
+
+  /* ===== 左侧菜单 ===== */
+  #sidebar {
+    position: sticky; top: 0; height: 100dvh; overflow-y: auto;
+    background: var(--panel); border-right: 1px solid var(--border);
+    padding: 1.1rem .9rem 2rem; scrollbar-width: thin;
+  }
+  .brand { display: block; margin-bottom: .9rem; text-decoration: none; color: var(--text); }
+  .brand .t { font-weight: 700; font-size: 1.02rem; }
+  .brand .s { color: var(--muted); font-size: .78rem; }
+  #menu details { margin-bottom: .3rem; }
+  #menu summary {
+    cursor: pointer; font-weight: 600; font-size: .9rem; padding: .32rem .45rem;
+    border-radius: 6px; user-select: none; list-style: none;
+    display: flex; align-items: center; gap: .4rem;
+  }
+  #menu summary::-webkit-details-marker { display: none; }
+  #menu summary::before { content: '▸'; color: var(--muted); transition: transform .15s; font-size: .8em; }
+  #menu details[open] > summary::before { transform: rotate(90deg); }
+  #menu summary:hover { background: var(--bg); }
+  #menu details[open] > summary { color: var(--accent); }
+  #menu .count { color: var(--muted); font-weight: 400; font-size: .76rem; margin-left: auto; }
+  #menu ul { list-style: none; margin: .1rem 0 .45rem; padding: 0 0 0 .55rem; }
+  #menu li a {
+    display: block; padding: .28rem .6rem; border-radius: 6px;
+    color: var(--text); text-decoration: none; font-size: .86rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  #menu li a:hover { background: var(--bg); color: var(--accent); }
+  .side-sec-title {
+    font-size: .78rem; color: var(--muted); letter-spacing: .06em;
+    margin: 1.1rem .45rem .35rem; text-transform: uppercase;
+  }
+
+  /* ===== 右侧内容 ===== */
+  main { min-width: 0; padding: 2.8rem clamp(1.2rem, 4vw, 3rem) 4rem; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+  header h1 { font-size: 1.9rem; margin: 0 0 .5rem; letter-spacing: -0.02em; }
   header .meta { color: var(--muted); margin: 0 0 .25rem; }
   header .meta a { color: var(--accent); text-decoration: none; }
   header .meta code { font-size: .85em; background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: .1em .4em; }
   .hint { color: var(--muted); font-size: .92rem; margin-top: .75rem; }
-  section { margin-top: 2.5rem; }
+  section { margin-top: 2.4rem; }
   section > h2 { font-size: 1.15rem; margin: 0 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid var(--border); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1rem; }
   a.card {
     display: block; background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
     padding: 1.1rem 1.2rem; text-decoration: none; color: var(--text);
@@ -40,21 +78,84 @@
   a.card:hover, a.card:focus-visible { border-color: var(--accent); transform: translateY(-2px); }
   .card .top { display: flex; align-items: center; gap: .6rem; margin-bottom: .4rem; }
   .card h3 { font-size: 1.02rem; margin: 0; }
-  .chip {
-    font-size: .72rem; padding: .1rem .55rem; border-radius: 999px;
-    background: var(--chip-bg); color: var(--chip-text); white-space: nowrap;
-  }
+  .chip { font-size: .72rem; padding: .1rem .55rem; border-radius: 999px; background: var(--chip-bg); color: var(--chip-text); white-space: nowrap; }
   .card p { margin: 0; color: var(--muted); font-size: .9rem; }
+  a.card.wide { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  a.card.wide .l h3 { margin-bottom: .25rem; }
+  a.card.wide .arrow { color: var(--accent); font-size: 1.3rem; }
   footer { margin-top: 3rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--border); padding-top: 1.25rem; }
   footer a { color: var(--accent); text-decoration: none; }
+
+  /* ===== 移动端：菜单抽屉 ===== */
+  #menu-btn { display: none; }
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    #sidebar {
+      position: fixed; z-index: 40; left: 0; width: min(85vw, var(--sidebar-w));
+      transform: translateX(-102%); transition: transform .2s ease; box-shadow: 0 0 30px rgba(0,0,0,.2);
+    }
+    body.side-open #sidebar { transform: none; }
+    #menu-btn {
+      display: block; position: fixed; z-index: 50; left: 1rem; bottom: 1.2rem;
+      border: 1px solid var(--border); border-radius: 999px; padding: .55rem 1.1rem;
+      background: var(--panel); color: var(--text); font-size: .9rem; box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    }
+    main { padding-top: 1.6rem; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<button id="menu-btn">☰ 菜单</button>
+<aside id="sidebar">
+  <a class="brand" href="./index.html">
+    <span class="t">BK-Lite 架构图集</span><br>
+    <span class="s">13 图 · 51 文档 · 上游 65fc3d67</span>
+  </a>
+  <nav id="menu">
+    <div class="side-sec-title">架构图</div>
+    <details open>
+      <summary><span>总览与入口</span><span class="count">2</span></summary>
+      <ul>
+        <li><a href="bklite-architecture.html">项目总览</a></li>
+        <li><a href="bklite-request-sequence.html">Web 请求时序</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><span>核心业务闭环</span><span class="count">3</span></summary>
+      <ul>
+        <li><a href="bklite-cmdb-collection.html">CMDB 采集闭环</a></li>
+        <li><a href="bklite-job-execution.html">作业与补丁执行</a></li>
+        <li><a href="bklite-apm-dataflow.html">APM 数据流</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><span>运行机制</span><span class="count">5</span></summary>
+      <ul>
+        <li><a href="bklite-server-startup.html">Server 启动依赖</a></li>
+        <li><a href="bklite-nats-topology.html">NATS 消息拓扑</a></li>
+        <li><a href="bklite-celery-lifecycle.html">Celery 生命周期</a></li>
+        <li><a href="bklite-agent-capabilities.html">Agent 能力分层</a></li>
+        <li><a href="bklite-module-navigation.html">业务模块导航</a></li>
+      </ul>
+    </details>
+    <details>
+      <summary><span>数据与部署</span><span class="count">3</span></summary>
+      <ul>
+        <li><a href="bklite-permission-boundary.html">权限与多租户边界</a></li>
+        <li><a href="bklite-cmdb-storage.html">CMDB 双存储</a></li>
+        <li><a href="bklite-deployment-topology.html">部署拓扑</a></li>
+      </ul>
+    </details>
+    <div class="side-sec-title">技术文档</div>
+    <div id="docs-menu"><div class="count" style="padding:.2rem .45rem">目录加载中…</div></div>
+  </nav>
+</aside>
+
+<main><div class="wrap">
   <header>
     <h1>BK-Lite 架构图集</h1>
     <p class="meta">基于 <a href="https://github.com/TencentBlueKing/bk-lite">TencentBlueKing/bk-lite</a> 上游 master（<code>65fc3d6759</code>，2026-10-28）绘制，共 13 张。</p>
-    <p class="hint">每张图为独立交互页，支持明暗主题、缩放、搜索、节点聚焦与引导视图；同名 <code>.json</code> 为 Archify 可复现规格；页面底部附上游技术文档目录。</p>
+    <p class="hint">每张图为独立交互页，支持明暗主题、缩放、搜索、节点聚焦与引导视图；同名 <code>.json</code> 为 Archify 可复现规格。左侧菜单可直达任意图与文档。</p>
   </header>
 
   <section>
@@ -95,83 +196,15 @@
   </section>
 
   <section>
-    <h2>项目文档</h2>
+    <h2>技术文档</h2>
     <div class="grid">
-      <a class="card" href="docs.html?doc=docs/Readme.md"><div class="top"><h3>Blueking Lite</h3></div><p>Readme.md</p></a>
-      <a class="card" href="docs.html?doc=docs/CONTEXT.md"><div class="top"><h3>BK-Lite Shared Context</h3></div><p>CONTEXT.md</p></a>
-      <a class="card" href="docs.html?doc=docs/PRODUCT.md"><div class="top"><h3>BK-Lite 产品原则</h3></div><p>PRODUCT.md</p></a>
-      <a class="card" href="docs.html?doc=docs/DESIGN.md"><div class="top"><h3>DESIGN.md</h3></div><p>DESIGN.md</p></a>
-      <a class="card" href="docs.html?doc=docs/DEVELOP.md"><div class="top"><h3>BK-Lite 开发与运行</h3></div><p>DEVELOP.md</p></a>
-    </div>
-  </section>
-
-  <section>
-    <h2>架构决策记录（ADR）</h2>
-    <div class="grid">
-      <a class="card" href="docs.html?doc=docs/0001-conversation-led-engineering-workflow.md"><div class="top"><h3>ADR 0001：采用按风险分级的 Grill 工程工作流</h3></div><p>0001-conversation-led-engineering-workflow.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0002-physically-delete-monitor-instances.md"><div class="top"><h3>ADR 0002：监控实例采用物理删除</h3></div><p>0002-physically-delete-monitor-instances.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0003-separate-apm-control-and-telemetry-planes.md"><div class="top"><h3>ADR 0003：APM 控制面与遥测数据面分离</h3></div><p>0003-separate-apm-control-and-telemetry-planes.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0004-apps-own-alert-lifecycles.md"><div class="top"><h3>ADR 0004：领域 App 拥有自身告警生命周期</h3></div><p>0004-apps-own-alert-lifecycles.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0005-use-uuid-as-cmdb-instance-identity.md"><div class="top"><h3>ADR 0005：使用 UUID 作为 CMDB 实例业务身份</h3></div><p>0005-use-uuid-as-cmdb-instance-identity.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0005-version-log-aggregate-group-identities.md"><div class="top"><h3>ADR 0005：日志聚合分组身份采用版本化规范摘要</h3></div><p>0005-version-log-aggregate-group-identities.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0006-apm-regional-nats-victoriatraces-pipeline.md"><div class="top"><h3>ADR 0006：APM 采用区域 Collector、JetStream 与 VictoriaTraces-only 数据面</h3></div><p>0006-apm-regional-nats-victoriatraces-pipeline.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0007-hide-victorialogs-message-field-behind-adapter.md"><div class="top"><h3>ADR 0007：把 VictoriaLogs 主消息字段封装在适配器内</h3></div><p>0007-hide-victorialogs-message-field-behind-adapter.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0008-apm-trusted-regional-ingress.md"><div class="top"><h3>ADR 0008：APM OTLP 入口采用受信区域网络边界</h3></div><p>0008-apm-trusted-regional-ingress.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0009-apm-event-snapshots-split-semantic-index-and-series-payload.md"><div class="top"><h3>ADR 0009：APM 事件快照拆分语义索引与指标序列载荷</h3></div><p>0009-apm-event-snapshots-split-semantic-index-and-series-payload.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0009-rum-public-gateway.md"><div class="top"><h3>ADR 0009: RUM public gateway is separate from APM trusted OTLP</h3></div><p>0009-rum-public-gateway.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0010-rum-requires-redis.md"><div class="top"><h3>ADR 0010: Redis is the RUM hot path, not the config authority</h3></div><p>0010-rum-requires-redis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/0010-use-central-log-receive-time-for-indexing.md"><div class="top"><h3>ADR 0010：日志索引统一使用中心接收时间</h3></div><p>0010-use-central-log-receive-time-for-indexing.md</p></a>
-    </div>
-  </section>
-
-  <section>
-    <h2>模块架构分析</h2>
-    <div class="grid">
-      <a class="card" href="docs.html?doc=docs/agent-architecture-evidence.md"><div class="top"><h3>Agent 使用模块架构证据指南</h3></div><p>agent-architecture-evidence.md</p></a>
-      <a class="card" href="docs.html?doc=docs/alerts-module-architecture-analysis.md"><div class="top"><h3>Alerts 模块架构与代码结构分析</h3></div><p>alerts-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/apm-module-architecture-analysis.md"><div class="top"><h3>APM 模块架构与代码结构分析</h3></div><p>apm-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/cmdb-module-architecture-analysis.md"><div class="top"><h3>CMDB 模块架构与代码结构分析</h3></div><p>cmdb-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/job-mgmt-module-architecture-analysis.md"><div class="top"><h3>JobMgmt 模块架构与代码结构分析</h3></div><p>job-mgmt-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/log-module-architecture-analysis.md"><div class="top"><h3>Log 模块架构与代码结构分析</h3></div><p>log-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/mlops-module-architecture-analysis.md"><div class="top"><h3>MLOps 模块架构与代码结构分析</h3></div><p>mlops-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/monitor-module-architecture-analysis.md"><div class="top"><h3>Monitor 模块架构与代码结构分析（示例）</h3></div><p>monitor-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/node-mgmt-module-architecture-analysis.md"><div class="top"><h3>NodeMgmt 模块架构与代码结构分析</h3></div><p>node-mgmt-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/operation-analysis-module-architecture-analysis.md"><div class="top"><h3>OperationAnalysis 模块架构与代码结构分析</h3></div><p>operation-analysis-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/opspilot-module-architecture-analysis.md"><div class="top"><h3>OpsPilot 模块架构与代码结构分析</h3></div><p>opspilot-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/patch-mgmt-module-architecture-analysis.md"><div class="top"><h3>PatchMgmt 模块架构与代码结构分析</h3></div><p>patch-mgmt-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/platform-core-module-architecture-analysis.md"><div class="top"><h3>平台基础能力模块架构与代码结构分析</h3></div><p>platform-core-module-architecture-analysis.md</p></a>
-      <a class="card" href="docs.html?doc=docs/server-module-analysis-roadmap.md"><div class="top"><h3>Server 后端模块架构分析路线图</h3></div><p>server-module-analysis-roadmap.md</p></a>
-      <a class="card" href="docs.html?doc=docs/system-mgmt-module-architecture-analysis.md"><div class="top"><h3>SystemMgmt 模块架构与代码结构分析</h3></div><p>system-mgmt-module-architecture-analysis.md</p></a>
-    </div>
-  </section>
-
-  <section>
-    <h2>运维手册</h2>
-    <div class="grid">
-      <a class="card" href="docs.html?doc=docs/api-token-permission-cache-rollout.md"><div class="top"><h3>API Token 权限代际缓存发布与回滚</h3></div><p>api-token-permission-cache-rollout.md</p></a>
-      <a class="card" href="docs.html?doc=docs/apm-probe-artifact-release.md"><div class="top"><h3>APM 探针制品发布 Runbook</h3></div><p>apm-probe-artifact-release.md</p></a>
-      <a class="card" href="docs.html?doc=docs/builtin-package-image-release.md"><div class="top"><h3>内置控制器与采集器包镜像发布 Runbook</h3></div><p>builtin-package-image-release.md</p></a>
-      <a class="card" href="docs.html?doc=docs/cmdb-instance-uuid-cutover.md"><div class="top"><h3>CMDB 实例 UUID 切换 Runbook</h3></div><p>cmdb-instance-uuid-cutover.md</p></a>
-      <a class="card" href="docs.html?doc=docs/console-iframe-screen-mode.md"><div class="top"><h3>Control Console iframe 屏显模式</h3></div><p>console-iframe-screen-mode.md</p></a>
-      <a class="card" href="docs.html?doc=docs/default-namespace-nats-credentials.md"><div class="top"><h3>默认命名空间 NATS 凭据升级</h3></div><p>default-namespace-nats-credentials.md</p></a>
-      <a class="card" href="docs.html?doc=docs/external-nats-notification-subscriber.md"><div class="top"><h3>外部服务订阅 BK-Lite 通知</h3></div><p>external-nats-notification-subscriber.md</p></a>
-      <a class="card" href="docs.html?doc=docs/nats-package-init-timeout-troubleshooting.md"><div class="top"><h3>NATS 包初始化连接超时排查手册</h3></div><p>nats-package-init-timeout-troubleshooting.md</p></a>
-      <a class="card" href="docs.html?doc=docs/pg-connection-diagnostics.md"><div class="top"><h3>PG 连接不回落：临时诊断日志</h3></div><p>pg-connection-diagnostics.md</p></a>
-      <a class="card" href="docs.html?doc=docs/server-startup-dependencies.md"><div class="top"><h3>Server 启动顺序与服务依赖边界</h3></div><p>server-startup-dependencies.md</p></a>
-      <a class="card" href="docs.html?doc=docs/windows-controller-remote-install-release.md"><div class="top"><h3>Windows 控制器远程安装发布 Runbook</h3></div><p>windows-controller-remote-install-release.md</p></a>
-      <a class="card" href="docs.html?doc=docs/zombie-host-report-prerequisites.md"><div class="top"><h3>僵尸机报表前置配置手册</h3></div><p>zombie-host-report-prerequisites.md</p></a>
-    </div>
-  </section>
-
-  <section>
-    <h2>工程能力规范</h2>
-    <div class="grid">
-      <a class="card" href="docs.html?doc=docs/backend-engineering.md"><div class="top"><h3>后端编码规范 / 高频陷阱清单</h3></div><p>backend-engineering.md</p></a>
-      <a class="card" href="docs.html?doc=docs/platform-security.md"><div class="top"><h3>安全红线</h3></div><p>platform-security.md</p></a>
-      <a class="card" href="docs.html?doc=docs/platform-reliability.md"><div class="top"><h3>可靠性红线</h3></div><p>platform-reliability.md</p></a>
-      <a class="card" href="docs.html?doc=docs/engineering-quality.md"><div class="top"><h3>质量门禁</h3></div><p>engineering-quality.md</p></a>
-      <a class="card" href="docs.html?doc=docs/engineering-architecture.md"><div class="top"><h3>系统架构</h3></div><p>engineering-architecture.md</p></a>
-      <a class="card" href="docs.html?doc=docs/openapi-gateway.md"><div class="top"><h3>OpenAPI 统一网关 / 对外暴露规范</h3></div><p>openapi-gateway.md</p></a>
+      <a class="card wide" href="docs.html?doc=docs/Readme.md">
+        <div class="l">
+          <h3>51 篇上游技术文档</h3>
+          <p>项目文档 · ADR · 模块架构分析 · 运维手册 · 工程能力规范，左侧菜单可直达任意一篇</p>
+        </div>
+        <span class="arrow">→</span>
+      </a>
     </div>
   </section>
 
@@ -179,6 +212,39 @@
     规格与索引见 <a href="https://github.com/fadewalk/bk-lite-architecture">fadewalk/bk-lite-architecture</a> ·
     由 <a href="https://github.com/tt-a1i/archify">Archify</a> 生成 · 上游文档入口：<a href="https://github.com/TencentBlueKing/bk-lite">TencentBlueKing/bk-lite</a>
   </footer>
-</div>
+</div></main>
+
+<script>
+(() => {
+  const box = document.getElementById('docs-menu');
+  fetch('catalog.json').then(r => r.json()).then(groups => {
+    box.innerHTML = '';
+    for (const g of groups) {
+      const det = document.createElement('details');
+      const sum = document.createElement('summary');
+      const name = document.createElement('span'); name.textContent = g.group;
+      const cnt = document.createElement('span'); cnt.className = 'count'; cnt.textContent = g.items.length;
+      sum.append(name, cnt); det.appendChild(sum);
+      const ul = document.createElement('ul');
+      for (const it of g.items) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = './docs.html?doc=docs/' + it.file;
+        a.textContent = it.title; a.title = it.file;
+        li.appendChild(a); ul.appendChild(li);
+      }
+      det.appendChild(ul); box.appendChild(det);
+    }
+  }).catch(() => { box.innerHTML = '<div class="count" style="padding:.2rem .45rem">目录加载失败</div>'; });
+
+  const btn = document.getElementById('menu-btn');
+  btn.addEventListener('click', () => document.body.classList.toggle('side-open'));
+  document.addEventListener('click', e => {
+    if (document.body.classList.contains('side-open') &&
+        !e.target.closest('#sidebar') && !e.target.closest('#menu-btn'))
+      document.body.classList.remove('side-open');
+  });
+})();
+</script>
 </body>
 </html>
