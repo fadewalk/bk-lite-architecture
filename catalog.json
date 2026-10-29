@@ -1,0 +1,231 @@
+[
+ {
+  "group": "项目文档",
+  "items": [
+   {
+    "file": "Readme.md",
+    "title": "Blueking Lite"
+   },
+   {
+    "file": "CONTEXT.md",
+    "title": "BK-Lite Shared Context"
+   },
+   {
+    "file": "PRODUCT.md",
+    "title": "BK-Lite 产品原则"
+   },
+   {
+    "file": "DESIGN.md",
+    "title": "DESIGN.md"
+   },
+   {
+    "file": "DEVELOP.md",
+    "title": "BK-Lite 开发与运行"
+   }
+  ]
+ },
+ {
+  "group": "架构决策记录（ADR）",
+  "items": [
+   {
+    "file": "0001-conversation-led-engineering-workflow.md",
+    "title": "ADR 0001：采用按风险分级的 Grill 工程工作流"
+   },
+   {
+    "file": "0002-physically-delete-monitor-instances.md",
+    "title": "ADR 0002：监控实例采用物理删除"
+   },
+   {
+    "file": "0003-separate-apm-control-and-telemetry-planes.md",
+    "title": "ADR 0003：APM 控制面与遥测数据面分离"
+   },
+   {
+    "file": "0004-apps-own-alert-lifecycles.md",
+    "title": "ADR 0004：领域 App 拥有自身告警生命周期"
+   },
+   {
+    "file": "0005-use-uuid-as-cmdb-instance-identity.md",
+    "title": "ADR 0005：使用 UUID 作为 CMDB 实例业务身份"
+   },
+   {
+    "file": "0005-version-log-aggregate-group-identities.md",
+    "title": "ADR 0005：日志聚合分组身份采用版本化规范摘要"
+   },
+   {
+    "file": "0006-apm-regional-nats-victoriatraces-pipeline.md",
+    "title": "ADR 0006：APM 采用区域 Collector、JetStream 与 VictoriaTraces-only 数据面"
+   },
+   {
+    "file": "0007-hide-victorialogs-message-field-behind-adapter.md",
+    "title": "ADR 0007：把 VictoriaLogs 主消息字段封装在适配器内"
+   },
+   {
+    "file": "0008-apm-trusted-regional-ingress.md",
+    "title": "ADR 0008：APM OTLP 入口采用受信区域网络边界"
+   },
+   {
+    "file": "0009-apm-event-snapshots-split-semantic-index-and-series-payload.md",
+    "title": "ADR 0009：APM 事件快照拆分语义索引与指标序列载荷"
+   },
+   {
+    "file": "0009-rum-public-gateway.md",
+    "title": "ADR 0009: RUM public gateway is separate from APM trusted OTLP"
+   },
+   {
+    "file": "0010-rum-requires-redis.md",
+    "title": "ADR 0010: Redis is the RUM hot path, not the config authority"
+   },
+   {
+    "file": "0010-use-central-log-receive-time-for-indexing.md",
+    "title": "ADR 0010：日志索引统一使用中心接收时间"
+   }
+  ]
+ },
+ {
+  "group": "模块架构分析",
+  "items": [
+   {
+    "file": "agent-architecture-evidence.md",
+    "title": "Agent 使用模块架构证据指南"
+   },
+   {
+    "file": "alerts-module-architecture-analysis.md",
+    "title": "Alerts 模块架构与代码结构分析"
+   },
+   {
+    "file": "apm-module-architecture-analysis.md",
+    "title": "APM 模块架构与代码结构分析"
+   },
+   {
+    "file": "cmdb-module-architecture-analysis.md",
+    "title": "CMDB 模块架构与代码结构分析"
+   },
+   {
+    "file": "job-mgmt-module-architecture-analysis.md",
+    "title": "JobMgmt 模块架构与代码结构分析"
+   },
+   {
+    "file": "log-module-architecture-analysis.md",
+    "title": "Log 模块架构与代码结构分析"
+   },
+   {
+    "file": "mlops-module-architecture-analysis.md",
+    "title": "MLOps 模块架构与代码结构分析"
+   },
+   {
+    "file": "monitor-module-architecture-analysis.md",
+    "title": "Monitor 模块架构与代码结构分析（示例）"
+   },
+   {
+    "file": "node-mgmt-module-architecture-analysis.md",
+    "title": "NodeMgmt 模块架构与代码结构分析"
+   },
+   {
+    "file": "operation-analysis-module-architecture-analysis.md",
+    "title": "OperationAnalysis 模块架构与代码结构分析"
+   },
+   {
+    "file": "opspilot-module-architecture-analysis.md",
+    "title": "OpsPilot 模块架构与代码结构分析"
+   },
+   {
+    "file": "patch-mgmt-module-architecture-analysis.md",
+    "title": "PatchMgmt 模块架构与代码结构分析"
+   },
+   {
+    "file": "platform-core-module-architecture-analysis.md",
+    "title": "平台基础能力模块架构与代码结构分析"
+   },
+   {
+    "file": "server-module-analysis-roadmap.md",
+    "title": "Server 后端模块架构分析路线图"
+   },
+   {
+    "file": "system-mgmt-module-architecture-analysis.md",
+    "title": "SystemMgmt 模块架构与代码结构分析"
+   }
+  ]
+ },
+ {
+  "group": "运维手册",
+  "items": [
+   {
+    "file": "api-token-permission-cache-rollout.md",
+    "title": "API Token 权限代际缓存发布与回滚"
+   },
+   {
+    "file": "apm-probe-artifact-release.md",
+    "title": "APM 探针制品发布 Runbook"
+   },
+   {
+    "file": "builtin-package-image-release.md",
+    "title": "内置控制器与采集器包镜像发布 Runbook"
+   },
+   {
+    "file": "cmdb-instance-uuid-cutover.md",
+    "title": "CMDB 实例 UUID 切换 Runbook"
+   },
+   {
+    "file": "console-iframe-screen-mode.md",
+    "title": "Control Console iframe 屏显模式"
+   },
+   {
+    "file": "default-namespace-nats-credentials.md",
+    "title": "默认命名空间 NATS 凭据升级"
+   },
+   {
+    "file": "external-nats-notification-subscriber.md",
+    "title": "外部服务订阅 BK-Lite 通知"
+   },
+   {
+    "file": "nats-package-init-timeout-troubleshooting.md",
+    "title": "NATS 包初始化连接超时排查手册"
+   },
+   {
+    "file": "pg-connection-diagnostics.md",
+    "title": "PG 连接不回落：临时诊断日志"
+   },
+   {
+    "file": "server-startup-dependencies.md",
+    "title": "Server 启动顺序与服务依赖边界"
+   },
+   {
+    "file": "windows-controller-remote-install-release.md",
+    "title": "Windows 控制器远程安装发布 Runbook"
+   },
+   {
+    "file": "zombie-host-report-prerequisites.md",
+    "title": "僵尸机报表前置配置手册"
+   }
+  ]
+ },
+ {
+  "group": "工程能力规范",
+  "items": [
+   {
+    "file": "backend-engineering.md",
+    "title": "后端编码规范 / 高频陷阱清单"
+   },
+   {
+    "file": "platform-security.md",
+    "title": "安全红线"
+   },
+   {
+    "file": "platform-reliability.md",
+    "title": "可靠性红线"
+   },
+   {
+    "file": "engineering-quality.md",
+    "title": "质量门禁"
+   },
+   {
+    "file": "engineering-architecture.md",
+    "title": "系统架构"
+   },
+   {
+    "file": "openapi-gateway.md",
+    "title": "OpenAPI 统一网关 / 对外暴露规范"
+   }
+  ]
+ }
+]

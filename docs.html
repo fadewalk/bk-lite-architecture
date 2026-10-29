@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BK-Lite 技术文档阅读</title>
+<title>BK-Lite 技术文档</title>
 <style>
   :root {
     color-scheme: light dark;
     --bg: #f6f8fa; --panel: #ffffff; --text: #1f2328; --muted: #59636e;
     --border: #d1d9e0; --accent: #0969da; --code-bg: #f6f8fa;
+    --sidebar-w: 300px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -17,23 +18,71 @@
     }
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
     line-height: 1.7;
   }
-  .topbar {
-    position: sticky; top: 0; z-index: 10; background: var(--panel);
-    border-bottom: 1px solid var(--border); padding: .7rem 1.2rem;
-    display: flex; align-items: center; gap: 1rem;
+
+  /* ===== 布局：左侧目录树 + 右侧正文 ===== */
+  body { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+  #sidebar {
+    position: sticky; top: 0; height: 100dvh; overflow-y: auto;
+    background: var(--panel); border-right: 1px solid var(--border);
+    padding: 1rem .9rem 2rem; scrollbar-width: thin;
   }
-  .topbar a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .topbar .doc-title { color: var(--muted); font-size: .92rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  main { max-width: 880px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+  main { min-width: 0; padding: 2.5rem clamp(1rem, 4vw, 3rem) 5rem; }
+  .md-wrap { max-width: 860px; margin: 0 auto; }
+
+  /* ===== 侧栏 ===== */
+  .side-home { display: block; color: var(--accent); text-decoration: none; font-weight: 600; margin-bottom: .8rem; }
+  #doc-filter {
+    width: 100%; padding: .45rem .7rem; margin-bottom: .9rem;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text); font-size: .88rem;
+  }
+  #doc-filter:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  #catalog details { margin-bottom: .35rem; }
+  #catalog summary {
+    cursor: pointer; font-weight: 600; font-size: .9rem; padding: .3rem .4rem;
+    border-radius: 6px; user-select: none; list-style: none; display: flex; align-items: center; gap: .4rem;
+  }
+  #catalog summary::-webkit-details-marker { display: none; }
+  #catalog summary::before { content: '▸'; color: var(--muted); transition: transform .15s; font-size: .8em; }
+  #catalog details[open] > summary::before { transform: rotate(90deg); }
+  #catalog summary:hover { background: var(--bg); }
+  #catalog details[open] > summary { color: var(--accent); }
+  #catalog .count { color: var(--muted); font-weight: 400; font-size: .78rem; margin-left: auto; }
+  #catalog ul { list-style: none; margin: .15rem 0 .4rem; padding: 0 0 0 .6rem; }
+  #catalog li a {
+    display: block; padding: .3rem .6rem; border-radius: 6px;
+    color: var(--text); text-decoration: none; font-size: .86rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  #catalog li a:hover { background: var(--bg); color: var(--accent); }
+  #catalog li a.active { background: var(--bg); color: var(--accent); font-weight: 600; }
+  #catalog .empty { color: var(--muted); font-size: .84rem; padding: .3rem .6rem; }
+
+  /* ===== 本文目录（TOC） ===== */
+  #toc-box { margin-top: 1.4rem; border-top: 1px solid var(--border); padding-top: .9rem; }
+  #toc-box h4 { margin: 0 0 .5rem; font-size: .85rem; color: var(--muted); }
+  #toc ul { list-style: none; margin: 0; padding: 0; }
+  #toc li a {
+    display: block; padding: .22rem .6rem; border-radius: 6px; text-decoration: none;
+    color: var(--muted); font-size: .84rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  #toc li.lvl3 a { padding-left: 1.4rem; font-size: .8rem; }
+  #toc li a:hover { color: var(--accent); background: var(--bg); }
+  #toc li a.active { color: var(--accent); font-weight: 600; }
+  #toc-box.hidden { display: none; }
+
+  /* ===== 正文 ===== */
   .md-body img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
   .md-body h1 { font-size: 1.7rem; letter-spacing: -0.02em; border-bottom: 1px solid var(--border); padding-bottom: .5rem; }
-  .md-body h2 { font-size: 1.3rem; margin-top: 2rem; border-bottom: 1px solid var(--border); padding-bottom: .35rem; }
-  .md-body h3 { font-size: 1.1rem; margin-top: 1.5rem; }
+  .md-body h2 { font-size: 1.3rem; margin-top: 2.2rem; border-bottom: 1px solid var(--border); padding-bottom: .35rem; }
+  .md-body h3 { font-size: 1.12rem; margin-top: 1.6rem; }
+  .md-body h4 { font-size: 1rem; margin-top: 1.3rem; }
   .md-body code {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: .88em; background: var(--code-bg); border: 1px solid var(--border);
@@ -41,54 +90,185 @@
   }
   .md-body pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; }
   .md-body pre code { background: none; border: none; padding: 0; font-size: .85em; }
-  .md-body table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  .md-body table { border-collapse: collapse; width: 100%; margin: 1rem 0; display: block; overflow-x: auto; }
   .md-body th, .md-body td { border: 1px solid var(--border); padding: .45rem .7rem; text-align: left; }
   .md-body th { background: var(--code-bg); }
   .md-body blockquote { margin: 1rem 0; padding: .2rem 1rem; border-left: 3px solid var(--accent); color: var(--muted); }
   .md-body a { color: var(--accent); }
   .md-body hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
-  .loading, .error { color: var(--muted); padding: 3rem 0; text-align: center; }
+  .loading, .error { color: var(--muted); padding: 4rem 0; text-align: center; }
   .error { color: #cf222e; }
   @media (prefers-color-scheme: dark) { .error { color: #f85149; } }
+
+  /* ===== 移动端 ===== */
+  #menu-btn { display: none; }
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; }
+    #sidebar {
+      position: fixed; z-index: 40; left: 0; width: min(85vw, var(--sidebar-w));
+      transform: translateX(-102%); transition: transform .2s ease; box-shadow: 0 0 30px rgba(0,0,0,.2);
+    }
+    body.side-open #sidebar { transform: none; }
+    #menu-btn {
+      display: block; position: fixed; z-index: 50; left: 1rem; bottom: 1.2rem;
+      border: 1px solid var(--border); border-radius: 999px; padding: .55rem 1.1rem;
+      background: var(--panel); color: var(--text); font-size: .9rem; box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    }
+    main { padding-top: 1.5rem; }
+  }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <a href="./index.html">← 返回图集首页</a>
-  <span class="doc-title" id="doc-title">加载中…</span>
-</div>
-<main><div id="content" class="loading">正在加载文档…</div></main>
+<button id="menu-btn">☰ 目录</button>
+<aside id="sidebar">
+  <a class="side-home" href="./index.html">← 图集首页</a>
+  <input id="doc-filter" type="search" placeholder="筛选文档…" autocomplete="off">
+  <nav id="catalog"><div class="empty">目录加载中…</div></nav>
+  <div id="toc-box" class="hidden">
+    <h4>本文目录</h4>
+    <nav id="toc"></nav>
+  </div>
+</aside>
+<main><div class="md-wrap"><div id="content" class="loading">正在加载文档…</div></div></main>
+
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script>
-(async () => {
+(() => {
+  const $ = s => document.querySelector(s);
   const params = new URLSearchParams(location.search);
-  const doc = params.get('doc') || '';
-  const el = document.getElementById('content');
-  const titleEl = document.getElementById('doc-title');
-  if (!doc || !/^[\w./-]+\.md$/.test(doc)) {
-    el.className = 'error'; el.textContent = '未指定有效文档。请从首页目录进入。'; return;
+  const current = params.get('doc') || '';
+  const catalogEl = $('#catalog'), tocEl = $('#toc'), tocBox = $('#toc-box');
+  const contentEl = $('#content'), titleEl = null;
+  let catalog = [];
+
+  const loadCatalog = fetch('catalog.json').then(r => {
+    if (!r.ok) throw new Error('catalog ' + r.status);
+    return r.json();
+  });
+
+  function buildCatalog() {
+    catalogEl.innerHTML = '';
+    for (const g of catalog) {
+      const det = document.createElement('details');
+      const items = g.items.filter(it =>
+        !filter || it.title.toLowerCase().includes(filter) || it.file.toLowerCase().includes(filter));
+      if (filter && !items.length) continue;
+      const sum = document.createElement('summary');
+      sum.innerHTML = `<span></span><span class="count">${g.items.length}</span>`;
+      sum.firstChild.textContent = g.group;
+      det.appendChild(sum);
+      const ul = document.createElement('ul');
+      for (const it of items) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = './docs.html?doc=docs/' + it.file;
+        a.textContent = it.title;
+        a.title = it.file;
+        if ('docs/' + it.file === current) { a.classList.add('active'); det.open = true; }
+        a.addEventListener('click', () => document.body.classList.remove('side-open'));
+        li.appendChild(a); ul.appendChild(li);
+      }
+      det.appendChild(ul); catalogEl.appendChild(det);
+    }
+    if (current) markActive();
   }
-  try {
-    const res = await fetch(doc);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const md = await res.text();
-    const dir = doc.includes('/') ? doc.slice(0, doc.lastIndexOf('/') + 1) : '';
-    // 正文内相对图片/链接补全到 docs/ 目录；外链与锚点不动
+
+  function markActive() {
+    catalogEl.querySelectorAll('li a').forEach(a =>
+      a.classList.toggle('active', a.getAttribute('href') === './' + current));
+  }
+
+  let filter = '';
+  $('#doc-filter').addEventListener('input', e => {
+    filter = e.target.value.trim().toLowerCase();
+    buildCatalog();
+  });
+
+  // ===== 渲染正文 =====
+  const slug = t => 'h-' + t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+
+  function buildToc(headings) {
+    tocEl.innerHTML = '';
+    if (!headings.length) { tocBox.classList.add('hidden'); return; }
+    tocBox.classList.remove('hidden');
+    const ul = document.createElement('ul');
+    for (const h of headings) {
+      const li = document.createElement('li');
+      li.className = h.level === 3 ? 'lvl3' : 'lvl2';
+      const a = document.createElement('a');
+      a.href = '#' + h.id; a.textContent = h.text;
+      a.dataset.target = h.id;
+      li.appendChild(a); ul.appendChild(li);
+    }
+    tocEl.appendChild(ul);
+  }
+
+  function render(md, dir) {
     md = md.replace(/(!\[[^\]]*\]\()(\.\/)?(?!https?:|#)([^)]+)\)/g, (m, pre, dot, path) => pre + dir + path + ')');
+    marked.setOptions({ gfm: true });
+    contentEl.className = 'md-body';
+    contentEl.innerHTML = marked.parse(md);
+    // 从 DOM 收集 h2/h3，补 id 并生成本文目录
+    const seen = {};
+    const headings = [];
+    contentEl.querySelectorAll('h2, h3').forEach(h => {
+      const base = slug(h.textContent) || 'sec';
+      let id = base, i = 2;
+      while (seen[id]) id = base + '-' + (i++);
+      seen[id] = true; h.id = id;
+      headings.push({ level: +h.tagName[1], text: h.textContent, id });
+    });
+    buildToc(headings);
     const firstHeading = (md.match(/^#\s+(.+)$/m) || [])[1];
     document.title = (firstHeading ? firstHeading + ' · ' : '') + 'BK-Lite 技术文档';
-    titleEl.textContent = doc;
-    el.className = 'md-body';
-    el.innerHTML = marked.parse(md);
-    // 站内 md 相互跳转：指向阅读页自身
-    el.querySelectorAll('a[href$=".md"]').forEach(a => {
+    // 站内 md 互链 → 阅读页
+    contentEl.querySelectorAll('a[href$=".md"]').forEach(a => {
       const href = a.getAttribute('href');
       if (!/^https?:/.test(href)) a.href = './docs.html?doc=' + dir + href.replace(/^\.\//, '');
     });
-  } catch (e) {
-    el.className = 'error';
-    el.textContent = '文档加载失败（' + e.message + '）。可直接在仓库中查看：' + doc;
+    // TOC 滚动高亮
+    if (headings.length) {
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            tocEl.querySelectorAll('a').forEach(a =>
+              a.classList.toggle('active', a.dataset.target === en.target.id));
+          }
+        });
+      }, { rootMargin: '0px 0px -70% 0px' });
+      contentEl.querySelectorAll('h2, h3').forEach(h => obs.observe(h));
+    }
   }
+
+  async function loadDoc() {
+    if (!current || !/^[\w./-]+\.md$/.test(current)) {
+      contentEl.className = 'error';
+      contentEl.textContent = '未指定有效文档，请从左侧目录选择。';
+      return;
+    }
+    markActive();
+    try {
+      const res = await fetch(current);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const md = await res.text();
+      const dir = current.includes('/') ? current.slice(0, current.lastIndexOf('/') + 1) : '';
+      render(md, dir);
+    } catch (e) {
+      contentEl.className = 'error';
+      contentEl.textContent = '文档加载失败（' + e.message + '）。仓库路径：' + current;
+    }
+  }
+
+  // ===== 移动端抽屉 =====
+  $('#menu-btn').addEventListener('click', () => document.body.classList.toggle('side-open'));
+  document.addEventListener('click', e => {
+    if (document.body.classList.contains('side-open') &&
+        !e.target.closest('#sidebar') && !e.target.closest('#menu-btn'))
+      document.body.classList.remove('side-open');
+  });
+
+  Promise.resolve(loadCatalog).then(c => { catalog = c; buildCatalog(); loadDoc(); })
+    .catch(() => { catalogEl.innerHTML = '<div class="empty">目录加载失败</div>'; loadDoc(); });
 })();
 </script>
 </body>

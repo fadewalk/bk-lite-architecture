@@ -86,4 +86,4 @@
 - **运维手册**：启动依赖、发布、诊断等 12 篇
 - **工程能力规范**：后端工程、安全、可靠性、质量、架构、OpenAPI 网关 6 篇
 
-在线阅读入口：[docs.html](https://fadewalk.github.io/bk-lite-architecture/docs.html?doc=docs/Readme.md)，或从首页目录进入。
+在线阅读入口：[docs.html](https://fadewalk.github.io/bk-lite-architecture/docs.html?doc=docs/Readme.md)，或从首页目录进入。阅读页左侧为全部分组的目录树（可筛选、可折叠、当前文档高亮）与本文标题目录。
